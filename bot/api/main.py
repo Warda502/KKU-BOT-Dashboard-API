@@ -57,7 +57,8 @@ else:
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     logger.error(f"Unhandled API exception: {exc}", exc_info=True)
+    import traceback
     return JSONResponse(
         status_code=500,
-        content={"detail": "حدث خطأ داخلي في الخادم"}
+        content={"detail": str(exc), "type": type(exc).__name__, "trace": traceback.format_exc()}
     )
