@@ -3,11 +3,6 @@
   "outputDirectory": "dashboard/dist",
   "installCommand": "pip install -r requirements.txt",
   "framework": null,
-  "functions": {
-    "api/index.py": {
-      "runtime": "@vercel/python"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/:path*",
