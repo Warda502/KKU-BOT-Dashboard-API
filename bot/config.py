@@ -1,5 +1,4 @@
 import os
-import re
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -7,23 +6,10 @@ load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 
-def _to_pooler_url(url: str) -> str:
-    # Supabase direct: postgresql://postgres:PASS@db.REF.supabase.co:5432/postgres
-    # Supabase pooler: postgresql+asyncpg://postgres.REF:PASS@aws-0-ap-south-1.pooler.supabase.com:6543/postgres
-    m = re.match(r'postgres(ql)?(\+\w+)?://postgres:([^@]+)@db\.([^.]+)\.supabase\.co:5432/(.+)', url)
-    if m:
-        password = m.group(3)
-        ref = m.group(4)
-        db = m.group(5)
-        return f"postgresql+asyncpg://postgres.{ref}:{password}@aws-0-ap-south-1.pooler.supabase.com:6543/{db}"
-    return url
-
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
 elif DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
-
-DATABASE_URL = _to_pooler_url(DATABASE_URL)
 
 ADMIN_IDS = [int(x) for x in os.getenv("ADMIN_IDS", "").split(",") if x]
 
